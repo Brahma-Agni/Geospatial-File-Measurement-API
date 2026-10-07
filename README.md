@@ -3,8 +3,8 @@
 [![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-3776AB)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688)](https://fastapi.tiangolo.com/)
 [![Vercel](https://img.shields.io/badge/Vercel-live-brightgreen)](https://geospatial-file-measurement-api-pink.vercel.app)
-[![Tests](https://img.shields.io/badge/tests-61%20passing-brightgreen)](#testing)
-[![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](#testing)
+[![Tests](https://img.shields.io/badge/tests-62%20passing-brightgreen)](#testing)
+[![Coverage](https://img.shields.io/badge/coverage-96%25-brightgreen)](#testing)
 
 A production-oriented FastAPI backend for uploading KML files and ZIP archives containing an ESRI Shapefile, preserving their original features, and calculating CRS-safe metric measurements.
 
@@ -31,6 +31,7 @@ The service processes small-to-medium files synchronously, persists file and fea
 ## Capabilities
 
 - accepts `.kml` and `.zip` uploads through multipart form data;
+- includes a responsive drag-and-drop web interface at the application root;
 - validates ZIP structure, entry count, extracted size, paths, and required Shapefile components;
 - reads vector data with GeoPandas and Pyogrio/GDAL;
 - rejects datasets without a known CRS instead of guessing one;
@@ -309,7 +310,7 @@ pytest -m stress
 ruff check .
 ```
 
-The verified baseline is 61 passing tests with 95% branch-aware coverage across unit, integration, regression, configuration, and stress behavior. The stress suite processes a 2,000-feature KML and exercises concurrent reads. These are deterministic regression loads, not universal latency or throughput guarantees.
+The verified baseline is 62 passing tests with 96% branch-aware coverage across unit, integration, regression, configuration, frontend delivery, and stress behavior. The stress suite processes a 2,000-feature KML and exercises concurrent reads. These are deterministic regression loads, not universal latency or throughput guarantees.
 
 See [Testing strategy](docs/testing.md) for test layers, coverage expectations, fixtures, and the verification matrix.
 

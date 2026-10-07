@@ -1,7 +1,10 @@
 import logging
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.api.files import router as files_router
 from app.config import get_settings
@@ -29,6 +32,14 @@ app = FastAPI(
 )
 register_exception_handlers(app)
 app.include_router(files_router)
+
+static_dir = Path(__file__).parent / "static"
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+
+@app.get("/", include_in_schema=False)
+def frontend() -> FileResponse:
+    return FileResponse(static_dir / "index.html")
 
 
 @app.get("/health", tags=["health"])

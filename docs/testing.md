@@ -23,7 +23,7 @@ ruff check .
 ruff format --check .
 ```
 
-The verified delivery baseline is 61 passing tests and 95% branch-aware application coverage, including serverless configuration validation.
+The verified delivery baseline is 62 passing tests and 96% branch-aware application coverage, including frontend delivery and serverless configuration validation.
 
 ## Test layers
 

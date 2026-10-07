@@ -43,7 +43,7 @@ const chooseFile = (file) => {
   const extension = file.name.split(".").pop()?.toLowerCase();
   if (!["kml", "zip"].includes(extension)) {
     input.value = "";
-    showError("Choose a .kml file or a .zip containing one ESRI Shapefile.");
+    showError("Choose a .kml or .zip file.");
     return;
   }
   if (file.size > 4 * 1024 * 1024) {
@@ -66,8 +66,7 @@ const renderMeasurements = (data) => {
     const row = document.createElement("tr");
     const values = [
       `#${feature.feature_index + 1}`,
-      feature.geometry_type,
-      measurement?.type || "Not applicable",
+      measurement?.type === "AREA" ? "Area" : measurement?.type === "LENGTH" ? "Length" : "—",
       measurement?.value == null ? "—" : `${measurement.value.toLocaleString(undefined, { maximumFractionDigits: 3 })} ${measurement.unit}`,
     ];
     values.forEach((value) => {
@@ -78,8 +77,9 @@ const renderMeasurements = (data) => {
     const statusCell = document.createElement("td");
     const badge = document.createElement("span");
     const state = measurement?.status || "SKIPPED";
+    const stateLabels = { SUCCESS: "Done", SKIPPED: "Not measured", FAILED: "Problem", UNSUPPORTED: "Not supported" };
     badge.className = `status-pill${state === "FAILED" ? " failed" : ""}`;
-    badge.textContent = state;
+    badge.textContent = stateLabels[state] || state;
     statusCell.append(badge);
     row.append(statusCell);
     rows.append(row);
@@ -130,12 +130,10 @@ form.addEventListener("submit", async (event) => {
 
     setText("#result-file", upload.filename);
     setText("#result-count", upload.feature_count.toLocaleString());
-    setText("#source-crs", upload.source_crs);
-    setText("#measurement-crs", upload.measurement_crs);
     renderMeasurements(measurements);
     setText("#result-note", upload.feature_count > measurements.features.length
-      ? `Showing the first ${measurements.features.length} of ${upload.feature_count} features.`
-      : `Processed file ID: ${upload.id}`);
+      ? `Showing the first ${measurements.features.length} of ${upload.feature_count} items.`
+      : `${upload.feature_count} ${upload.feature_count === 1 ? "item" : "items"} measured.`);
     statusBox.hidden = true;
     results.hidden = false;
     results.scrollIntoView({ behavior: "smooth", block: "start" });

@@ -3,52 +3,32 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Upload KML or zipped Shapefiles and calculate CRS-safe measurements.">
-    <title>TerraMetric — Geospatial File Measurement</title>
+    <meta name="description" content="Upload a file and calculate its measurements.">
+    <title>Geo-Metric</title>
     <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/static/styles.css">
     <script src="/static/app.js" defer></script>
   </head>
   <body>
-    <header class="site-header">
-      <a class="brand" href="/" aria-label="TerraMetric home">
-        <span class="brand-mark" aria-hidden="true">TM</span>
-        <span>TerraMetric</span>
-      </a>
-      <nav aria-label="Project links">
-        <a href="/docs">API docs</a>
-        <a href="https://github.com/Brahma-Agni/Geospatial-File-Measurement-API">GitHub</a>
-      </nav>
+    <header>
+      <a class="brand" href="/">Geo-Metric</a>
     </header>
 
     <main>
-      <section class="hero">
-        <p class="eyebrow">CRS-safe geospatial analysis</p>
-        <h1>Measure spatial data<br><em>without the guesswork.</em></h1>
-        <p class="intro">Upload a KML or zipped ESRI Shapefile. TerraMetric preserves the source geometry, selects a metric projection, and returns reliable area and length measurements.</p>
-        <ul class="proof-list" aria-label="Service capabilities">
-          <li>Metric area and length</li>
-          <li>Original geometry preserved</li>
-          <li>Secure archive validation</li>
-        </ul>
+      <section class="intro" aria-labelledby="page-title">
+        <h1 id="page-title">Upload your file</h1>
+        <p>We’ll calculate its area and length.</p>
       </section>
 
-      <section class="workspace" aria-labelledby="upload-title">
-        <div class="section-heading">
-          <div>
-            <p class="step">01 / Upload</p>
-            <h2 id="upload-title">Choose your dataset</h2>
-          </div>
-          <span class="live"><i></i> API live</span>
-        </div>
-
+      <section class="card" aria-labelledby="upload-title">
+        <h2 id="upload-title">Select a file</h2>
         <form id="upload-form">
           <label class="drop-zone" id="drop-zone" for="file-input">
             <input id="file-input" name="file" type="file" accept=".kml,.zip" required>
-            <span class="upload-icon" aria-hidden="true">↥</span>
-            <strong>Drop a file here</strong>
-            <span>or click to browse your computer</span>
-            <small>KML or zipped Shapefile · maximum 4 MB</small>
+            <span class="upload-icon" aria-hidden="true">↑</span>
+            <strong>Drop your file here</strong>
+            <span>or choose a file</span>
+            <small>.kml or .zip · up to 4 MB</small>
           </label>
 
           <div class="file-row" id="file-row" hidden>
@@ -60,53 +40,42 @@
             <button class="remove" id="remove-file" type="button" aria-label="Remove selected file">×</button>
           </div>
 
-          <button class="primary" id="submit-button" type="submit" disabled>
-            <span>Process dataset</span>
-            <span aria-hidden="true">→</span>
-          </button>
+          <button class="primary" id="submit-button" type="submit" disabled>Upload and measure</button>
         </form>
 
         <div class="status" id="status" role="status" aria-live="polite" hidden>
           <span class="spinner" aria-hidden="true"></span>
-          <div><strong id="status-title">Processing dataset</strong><small id="status-copy">Reading geometry and selecting a metric CRS…</small></div>
+          <div><strong>Working on your file</strong><small>This may take a moment.</small></div>
         </div>
 
         <div class="error" id="error" role="alert" hidden>
-          <strong id="error-title">Upload failed</strong>
+          <strong>Something went wrong</strong>
           <p id="error-message"></p>
         </div>
       </section>
 
-      <section class="results" id="results" aria-labelledby="results-title" hidden>
-        <div class="section-heading">
-          <div>
-            <p class="step">02 / Results</p>
-            <h2 id="results-title">Measurement report</h2>
-          </div>
-          <span class="complete">Completed</span>
+      <section class="card results" id="results" aria-labelledby="results-title" hidden>
+        <div class="results-heading">
+          <h2 id="results-title">Your results</h2>
+          <span class="complete">Done</span>
         </div>
 
-        <div class="summary-grid">
+        <div class="summary">
           <div><span>File</span><strong id="result-file"></strong></div>
-          <div><span>Features</span><strong id="result-count"></strong></div>
-          <div><span>Source CRS</span><strong id="source-crs"></strong></div>
-          <div><span>Measurement CRS</span><strong id="measurement-crs"></strong></div>
+          <div><span>Items</span><strong id="result-count"></strong></div>
         </div>
 
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Feature</th><th>Geometry</th><th>Measurement</th><th>Value</th><th>Status</th></tr></thead>
+            <thead><tr><th>Item</th><th>Measurement</th><th>Value</th><th>Result</th></tr></thead>
             <tbody id="measurement-rows"></tbody>
           </table>
         </div>
         <p class="result-note" id="result-note"></p>
-        <button class="secondary" id="new-upload" type="button">Measure another file</button>
+        <button class="secondary" id="new-upload" type="button">Upload another file</button>
       </section>
     </main>
 
-    <footer>
-      <span>TerraMetric API</span>
-      <span>FastAPI · GeoPandas · Neon PostgreSQL</span>
-    </footer>
+    <footer>Geo-Metric</footer>
   </body>
 </html>

@@ -15,7 +15,8 @@ def test_health(client):
 def test_frontend_and_static_assets(client):
     frontend = client.get("/")
     assert frontend.status_code == 200
-    assert "TerraMetric" in frontend.text
+    assert "Geo-Metric" in frontend.text
+    assert "CRS-safe geospatial analysis" not in frontend.text
     assert client.get("/static/styles.css").status_code == 200
     assert client.get("/static/app.js").status_code == 200
     assert client.get("/static/favicon.svg").status_code == 200

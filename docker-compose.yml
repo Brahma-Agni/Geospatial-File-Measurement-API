@@ -1,0 +1,17 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: sqlite:////data/app.db
+      UPLOAD_DIR: /data/uploads
+    volumes:
+      - geospatial_data:/data
+    restart: unless-stopped
+
+volumes:
+  geospatial_data:

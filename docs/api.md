@@ -2,6 +2,7 @@
 
 ## Conventions
 
+- Production base URL: `https://geospatial-file-measurement-api-pink.vercel.app`
 - Base URL in local development: `http://localhost:8000`
 - JSON is used for responses; uploads use `multipart/form-data`.
 - File identifiers are UUIDs.

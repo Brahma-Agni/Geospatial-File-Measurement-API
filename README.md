@@ -2,13 +2,17 @@
 
 [![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-3776AB)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688)](https://fastapi.tiangolo.com/)
-[![Vercel](https://img.shields.io/badge/deploy-Vercel-black)](docs/vercel.md)
+[![Vercel](https://img.shields.io/badge/Vercel-live-brightgreen)](https://geospatial-file-measurement-api-pink.vercel.app)
 [![Tests](https://img.shields.io/badge/tests-61%20passing-brightgreen)](#testing)
 [![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](#testing)
 
 A production-oriented FastAPI backend for uploading KML files and ZIP archives containing an ESRI Shapefile, preserving their original features, and calculating CRS-safe metric measurements.
 
 The service processes small-to-medium files synchronously, persists file and feature results, and exposes them through a documented REST API.
+
+> [!IMPORTANT]
+> **Live production API:** [geospatial-file-measurement-api-pink.vercel.app](https://geospatial-file-measurement-api-pink.vercel.app)<br>
+> **Interactive API docs:** [Swagger UI](https://geospatial-file-measurement-api-pink.vercel.app/docs) · [ReDoc](https://geospatial-file-measurement-api-pink.vercel.app/redoc) · [Health](https://geospatial-file-measurement-api-pink.vercel.app/health)
 
 ## Contents
 
@@ -91,7 +95,13 @@ Use `docker compose down -v` only when the persisted database and uploads should
 
 ## Deploy to Vercel
 
-The production deployment is one Python Vercel Function backed by external PostgreSQL. SQLite remains the zero-service local default but is rejected when `VERCEL=1`, because a serverless instance cannot provide durable local database storage.
+The live production deployment is one Python Vercel Function in Singapore (`sin1`) backed by a Neon PostgreSQL database in the same region. SQLite remains the zero-service local default but is rejected when `VERCEL=1`, because a serverless instance cannot provide durable local database storage.
+
+| Production resource | Link |
+|---|---|
+| API | **[Open the live application](https://geospatial-file-measurement-api-pink.vercel.app)** |
+| Swagger UI | [Explore and call the API](https://geospatial-file-measurement-api-pink.vercel.app/docs) |
+| Health check | [View current health](https://geospatial-file-measurement-api-pink.vercel.app/health) |
 
 1. Provision PostgreSQL through the Vercel Marketplace or another provider.
 2. Set `DATABASE_URL` to its pooled connection URL.
@@ -195,10 +205,10 @@ FastAPI route ──► FileService ──► geospatial functions ──► CRS
                       └──────────────► SQLAlchemy session ─────┘
                                              │
                                              ▼
-                                      SQLite / SQLAlchemy
+                            SQLite (local) / Neon PostgreSQL (Vercel)
 ```
 
-The HTTP layer validates transport concerns. Services own file and geospatial processing. Repositories own persistence. Pydantic schemas isolate the public contract from GeoPandas and SQLAlchemy objects.
+The HTTP layer validates transport concerns. Services own file and geospatial processing, while the routes and orchestration service use short SQLAlchemy queries directly. There is intentionally no repository wrapper with a single implementation. Pydantic schemas isolate the public contract from GeoPandas and SQLAlchemy objects.
 
 ### Repository structure
 
@@ -247,7 +257,7 @@ Operational guidance is in [Operations and deployment](docs/operations.md).
 
 ## Database and lifecycle
 
-The local database contains two tables:
+Both the local SQLite database and production PostgreSQL database contain two tables:
 
 - `uploaded_files`: UUID, safe stored name, original basename, type, size, source and measurement CRS, feature count, lifecycle status, timestamps, and file-level error;
 - `features`: upload foreign key, stable feature index, source identifier, original GeoJSON geometry and properties, measurement value/type/unit/status/message.
@@ -338,7 +348,7 @@ The project demonstrates GDAL-backed vector parsing, the multi-file nature of Sh
 
 ## Future scope
 
-- PostgreSQL/PostGIS with migrations and spatial indexes
+- Alembic migrations and optional PostGIS spatial columns/indexes
 - S3-compatible object storage and retention policies
 - Celery or another worker and queue for asynchronous processing
 - upload status polling, webhooks, and cancellation

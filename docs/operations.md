@@ -18,7 +18,7 @@ Environment variables override `.env` values. All numeric limits must be positiv
 
 | Variable | Development default | Operational guidance |
 |---|---|---|
-| `DATABASE_URL` | `sqlite:///./data/app.db` | Use an absolute SQLite path in containers; add a driver and migrations before PostgreSQL |
+| `DATABASE_URL` | `sqlite:///./data/app.db` | Use an absolute SQLite path in containers; production uses the pooled Neon PostgreSQL URL |
 | `UPLOAD_DIR` | `./data/uploads` | Mount durable storage and grant write access to the service user |
 | `MAX_UPLOAD_SIZE_MB` | `50` | Also enforce a request-body limit at the proxy/load balancer |
 | `MAX_EXTRACTED_SIZE_MB` | `200` | Size is the sum of ZIP entry declarations |
@@ -49,6 +49,8 @@ The `geospatial_data` named volume mounts at `/data`.
 ## Vercel
 
 Vercel is the production serverless target. It loads `app.main:app` from the `[tool.vercel]` entry point and deploys the complete API as one Python Function. Production requires external PostgreSQL through `DATABASE_URL`; the settings validator deliberately rejects SQLite when Vercel sets `VERCEL=1`.
+
+The live deployment is [geospatial-file-measurement-api-pink.vercel.app](https://geospatial-file-measurement-api-pink.vercel.app). The function and Neon database are both configured in Singapore (`sin1`) to avoid unnecessary database round trips between regions.
 
 Uploaded bytes use `/tmp/geospatial-uploads` only during processing and are deleted afterward. Set `MAX_UPLOAD_SIZE_MB=4` because the platform's 4.5 MB request limit includes multipart framing. Use a small `MAX_PAGE_SIZE`, such as 100, to reduce the chance of exceeding the same response limit.
 

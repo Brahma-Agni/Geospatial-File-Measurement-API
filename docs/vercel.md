@@ -1,5 +1,8 @@
 # Vercel Deployment
 
+> **Live deployment:** [geospatial-file-measurement-api-pink.vercel.app](https://geospatial-file-measurement-api-pink.vercel.app)<br>
+> [Swagger UI](https://geospatial-file-measurement-api-pink.vercel.app/docs) · [Health check](https://geospatial-file-measurement-api-pink.vercel.app/health)
+
 ## Production shape
 
 ```text
@@ -18,7 +21,7 @@ One Python Function running FastAPI
                             metadata and normalized features
 ```
 
-This is still the same FastAPI application used locally. Vercel loads `app.main:app` from `[tool.vercel]` in `pyproject.toml`; no adapter or duplicated route layer is needed.
+This is still the same FastAPI application used locally. Vercel loads `app.main:app` from `[tool.vercel]` in `pyproject.toml`; no adapter or duplicated route layer is needed. Production compute and the Neon PostgreSQL database run in Singapore (`sin1`).
 
 ## Why SQLite and durable local uploads are not used
 
